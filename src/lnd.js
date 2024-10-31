@@ -15,6 +15,7 @@ const lnd = axios.create({
 
 // INFO METHODS
 
+// https://lightning.engineering/api-docs/api/lnd/lightning/get-info
 export const getInfo = async () => {
    try {
       const response = await lnd.get("/v1/getinfo");
@@ -31,6 +32,7 @@ export const getInfo = async () => {
 
 // CHANNEL METHODS
 
+// https://lightning.engineering/api-docs/api/lnd/lightning/list-channels
 export const listChannels = async () => {
    try {
       const response = await lnd.get("/v1/channels");
@@ -45,6 +47,7 @@ export const listChannels = async () => {
    }
 }
 
+// https://lightning.engineering/api-docs/api/lnd/lightning/open-channel
 export const openChannel = async ({ nodePubkey, localFundingAmount }) => {
    try {
       // Opens a new channel to a node with the specified funding amount
@@ -66,6 +69,7 @@ export const openChannel = async ({ nodePubkey, localFundingAmount }) => {
    }
 }
 
+// https://lightning.engineering/api-docs/api/lnd/lightning/close-channel
 export const closeChannel = async ({ channelPoint, force = false }) => {
    try {
       // Closes the specified channel. The channel point format is: txid:output_index
@@ -87,6 +91,7 @@ export const closeChannel = async ({ channelPoint, force = false }) => {
 
 // INVOICE METHODS
 
+// https://lightning.engineering/api-docs/api/lnd/lightning/list-invoices
 export const listInvoices = async () => {
    try {
       // Returns a list of all invoices from the node
@@ -102,6 +107,7 @@ export const listInvoices = async () => {
    }
 }
 
+// https://lightning.engineering/api-docs/api/lnd/lightning/lookup-invoice
 export const lookupInvoice = async (rHashStr) => {
    try {
       // Convert from base64 to hex if needed
@@ -122,6 +128,7 @@ export const lookupInvoice = async (rHashStr) => {
    }
 }
 
+// https://lightning.engineering/api-docs/api/lnd/lightning/add-invoice/index.html
 export const addInvoice = async (amount) => {
    try {
       const response = await lnd.post("/v1/invoices", {
@@ -140,6 +147,7 @@ export const addInvoice = async (amount) => {
 
 // PAYMENT METHODS
 
+// https://lightning.engineering/api-docs/api/lnd/lightning/list-payments
 export const listPayments = async () => {
    try {
       // Returns a list of all outgoing payments
@@ -155,7 +163,8 @@ export const listPayments = async () => {
    }
 }
 
-export const payInvoice = async (paymentRequest) => {
+// https://lightning.engineering/api-docs/api/lnd/lightning/send-payment
+export const sendPayment = async (paymentRequest) => {
    try {
       const response = await lnd.post("/v1/channels/transactions", {
          payment_request: paymentRequest,
@@ -177,6 +186,7 @@ export const payInvoice = async (paymentRequest) => {
 
 // ONCHAIN METHODS
 
+// https://lightning.engineering/api-docs/api/lnd/lightning/wallet-balance
 export const walletBalance = async () => {
    try {
       // Returns total unspent outputs (confirmed and unconfirmed)
@@ -192,6 +202,7 @@ export const walletBalance = async () => {
    }
 }
 
+// https://lightning.engineering/api-docs/api/lnd/lightning/get-transactions
 export const getTransactions = async () => {
    try {
       // Returns a list of on-chain transactions from the wallet
@@ -224,6 +235,7 @@ export const newAddress = async (type = "WITNESS_PUBKEY_HASH") => {
    }
 }
 
+// https://lightning.engineering/api-docs/api/lnd/lightning/send-coins
 export const sendCoins = async ({ addr, amount, satPerVbyte }) => {
    try {
       const response = await lnd.post("/v1/transactions", {
@@ -244,6 +256,7 @@ export const sendCoins = async ({ addr, amount, satPerVbyte }) => {
 
 // PEER METHODS
 
+// https://lightning.engineering/api-docs/api/lnd/lightning/list-peers
 export const listPeers = async () => {
    try {
       // Returns a list of all active peers
@@ -259,6 +272,7 @@ export const listPeers = async () => {
    }
 }
 
+// https://lightning.engineering/api-docs/api/lnd/lightning/connect-peer
 export const connectPeer = async ({ pubkey, host }) => {
    try {
       // Attempts to establish a connection to a remote peer
@@ -280,6 +294,7 @@ export const connectPeer = async ({ pubkey, host }) => {
    }
 }
 
+// https://lightning.engineering/api-docs/api/lnd/lightning/disconnect-peer
 export const disconnectPeer = async (pubKey) => {
    try {
       // Disconnects from a connected peer
