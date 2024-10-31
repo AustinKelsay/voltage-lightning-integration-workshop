@@ -70,9 +70,6 @@ export const closeChannel = async ({ channelPoint, force = false }) => {
    try {
       // Closes the specified channel. The channel point format is: txid:output_index
       const [fundingTxId, outputIndex] = channelPoint.split(':');
-      console.log('Funding TxId:', fundingTxId);
-      console.log('Output Index:', outputIndex);
-      console.log('Force:', force);
       const response = await lnd.delete(
          `/v1/channels/${fundingTxId}/${outputIndex}`,
          { data: { force } }
@@ -107,8 +104,13 @@ export const listInvoices = async () => {
 
 export const lookupInvoice = async (rHashStr) => {
    try {
-      // Looks up an invoice by its payment hash
-      const response = await lnd.get(`/v1/invoice/${rHashStr}`);
+      // Convert from base64 to hex if needed
+      const isBase64 = /^[A-Za-z0-9+/]*={0,2}$/.test(rHashStr);
+      const hexHash = isBase64 
+         ? Array.from(atob(rHashStr), c => c.charCodeAt(0).toString(16).padStart(2, '0')).join('')
+         : rHashStr;
+
+      const response = await lnd.get(`/v1/invoice/${hexHash}`);
       console.log('LookupInvoice Response:', JSON.stringify(response.data, null, 2));
       return response.data;
    } catch (error) {

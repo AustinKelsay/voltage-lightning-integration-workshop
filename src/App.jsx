@@ -18,6 +18,7 @@ function App() {
   const [paymentForm, setPaymentForm] = useState({ paymentRequest: '' })
   const [peerForm, setPeerForm] = useState({ pubkey: '', host: '' })
   const [sendCoinsForm, setSendCoinsForm] = useState({ addr: '', amount: '', satPerVbyte: '' })
+  const [lookupInvoiceForm, setLookupInvoiceForm] = useState({ rHash: '' })
 
   // Specific handlers for different operations
   const handleGetInfo = async () => {
@@ -165,6 +166,15 @@ function App() {
     }
   }
 
+  const handleLookupInvoice = async (rHash) => {
+    try {
+      const result = await lnd.lookupInvoice(rHash)
+      alert(`Invoice found!\nValue: ${result.value} sats\nSettled: ${result.settled ? 'Yes' : 'No'}`)
+    } catch (error) {
+      alert(`Error looking up invoice: ${error.message}`)
+    }
+  }
+
   return (
     <div className="container">
       {/* Info Section */}
@@ -268,6 +278,20 @@ function App() {
           />
           <button type="submit">Create Invoice</button>
         </form>
+
+        <h3>Lookup Invoice</h3>
+        <form onSubmit={async (e) => {
+          e.preventDefault()
+          await handleLookupInvoice(lookupInvoiceForm.rHash)
+        }}>
+          <input
+            placeholder="Payment Hash"
+            value={lookupInvoiceForm.rHash}
+            onChange={e => setLookupInvoiceForm({...lookupInvoiceForm, rHash: e.target.value})}
+          />
+          <button type="submit">Lookup Invoice</button>
+        </form>
+
         {invoices && <pre>{JSON.stringify(invoices, null, 2)}</pre>}
       </section>
 
