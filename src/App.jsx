@@ -69,9 +69,9 @@ function App() {
     }
   }
 
-  const handlePayInvoice = async (paymentRequest) => {
+  const handleSendPayment = async (paymentRequest) => {
     try {
-      const result = await lnd.payInvoice(paymentRequest)
+      const result = await lnd.sendPayment(paymentRequest)
       alert(`Payment sent!\nPayment hash: ${result.payment_hash}`)
     } catch (error) {
       alert(`Error paying invoice: ${error.message}`)
@@ -303,7 +303,7 @@ function App() {
         <h3>Pay Invoice</h3>
         <form onSubmit={async (e) => {
           e.preventDefault()
-          await handlePayInvoice(paymentForm.paymentRequest)
+          await handleSendPayment(paymentForm.paymentRequest)
         }}>
           <input
             placeholder="Payment Request"
